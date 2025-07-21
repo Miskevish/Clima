@@ -1,0 +1,29 @@
+.sidebar-publicidad {
+  width: 250px;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(15px);
+  border-radius: 20px;
+  padding: 20px;
+  color: #fff;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+}
+
+.sidebar-publicidad h3 {
+  text-align: center;
+  font-weight: 600;
+  margin-bottom: 15px;
+}
+
+.ad-box {
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 12px;
+  padding: 15px;
+  margin-bottom: 15px;
+  text-align: center;
+  transition: all 0.3s ease;
+}
+
+.ad-box:hover {
+  transform: scale(1.05);
+  background: rgba(255, 255, 255, 0.3);
+}

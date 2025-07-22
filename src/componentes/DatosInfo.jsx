@@ -87,6 +87,7 @@ const DatosInfo = () => {
     }
     obtenerDolar();
 
+    /** ✅ Cargar los anuncios solo una vez **/
     if (window.adsbygoogle && process.env.NODE_ENV === "production") {
       try {
         (window.adsbygoogle = window.adsbygoogle || []).push({});
@@ -94,7 +95,7 @@ const DatosInfo = () => {
         console.warn("AdSense ya cargado, evitando duplicado.");
       }
     }
-  }, []);
+  }, []); // <-- Solo se ejecuta una vez
 
   const obtenerIcono = (condicion) => {
     const desc = condicion.toLowerCase();
@@ -152,10 +153,14 @@ const DatosInfo = () => {
               </h2>
 
               <div className="current-weather-body">
+                {/* ✅ Lazy loading + dimensiones */}
                 <img
                   className="big-icon"
                   src={obtenerIcono(climaActual.condition.text)}
                   alt="clima"
+                  width="80"
+                  height="80"
+                  loading="lazy"
                 />
                 <div className="weather-details">
                   <p>{climaActual.condition.text}</p>
@@ -181,9 +186,13 @@ const DatosInfo = () => {
                         month: "short",
                       })}
                     </p>
+                    {/* ✅ Lazy loading + dimensiones */}
                     <img
                       src={obtenerIcono(dia.day.condition.text)}
                       alt="clima"
+                      width="64"
+                      height="64"
+                      loading="lazy"
                     />
                     <p>{dia.day.condition.text}</p>
                     <p>☀️ Max: {dia.day.maxtemp_c}°C</p>
@@ -209,9 +218,13 @@ const DatosInfo = () => {
           {dolar && (
             <div className="dollar-cards">
               <div className="dollar-card">
+                {/* ✅ Lazy loading + dimensiones */}
                 <img
                   src="https://cdn-icons-png.flaticon.com/512/3135/3135706.png"
                   alt="blue"
+                  width="48"
+                  height="48"
+                  loading="lazy"
                 />
                 <div>
                   <h4>Dólar Blue</h4>
@@ -223,9 +236,13 @@ const DatosInfo = () => {
               </div>
 
               <div className="dollar-card">
+                {/* ✅ Lazy loading + dimensiones */}
                 <img
                   src="https://cdn-icons-png.flaticon.com/512/3443/3443338.png"
                   alt="oficial"
+                  width="48"
+                  height="48"
+                  loading="lazy"
                 />
                 <div>
                   <h4>Dólar Oficial</h4>
@@ -238,7 +255,7 @@ const DatosInfo = () => {
             </div>
           )}
 
-          {/* Google Ads Automáticos (sin duplicados) */}
+          {/* ✅ Google Ads Automáticos (sin duplicados) */}
           <div className="ad-space">
             <ins
               className="adsbygoogle"

@@ -7,37 +7,35 @@
   <title>SkyWatch - Clima en tiempo real, pronóstico 7 días y dólar blue</title>
 
   <meta name="description" content="Consulta el clima en tiempo real y el pronóstico extendido de 7 días para tu ciudad. Además, verifica el dólar blue y oficial en Argentina y Latinoamérica. SkyWatch: clima actualizado al instante.">
-
   <meta name="keywords" content="clima en tiempo real, pronóstico del tiempo, pronóstico semanal, dólar blue hoy, dólar oficial, clima argentina, clima latinoamérica, temperatura actual, tiempo exacto, pronóstico meteorológico">
-
   <meta name="author" content="SkyWatch Team">
   <meta name="robots" content="index, follow">
-
   <link rel="canonical" href="https://watchsky.netlify.app/" />
 
   <meta property="og:title" content="🌤 SkyWatch - Clima en tiempo real y pronóstico semanal" />
   <meta property="og:description" content="Consulta el clima actual, el pronóstico semanal y el dólar blue en tiempo real. SkyWatch te da la mejor información meteorológica en Argentina y LATAM." />
-  <meta property="og:image" content="https://watchsky.netlify.app/preview.png" />
+  <meta property="og:image" content="https://watchsky.netlify.app/preview.webp" />
   <meta property="og:url" content="https://watchsky.netlify.app/" />
   <meta property="og:type" content="website" />
 
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="SkyWatch - Clima en tiempo real y dólar blue">
   <meta name="twitter:description" content="Pronóstico del clima en tiempo real, semanal y dólar blue en Argentina y Latinoamérica.">
-  <meta name="twitter:image" content="https://watchsky.netlify.app/preview.png">
+  <meta name="twitter:image" content="https://watchsky.netlify.app/preview.webp">
 
-  <link rel="icon" type="image/png" href="/sun.png" />
-  <link rel="apple-touch-icon" href="/sun.png" />
+  <link rel="icon" type="image/png" href="/sun.webp" />
+  <link rel="apple-touch-icon" href="/sun.webp" />
   <meta name="theme-color" content="#0f2027" />
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="preload" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" as="style" onload="this.rel='stylesheet'">
+  <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap"></noscript>
+
   <link rel="stylesheet" href="/style.css">
   <link rel="manifest" href="/manifest.json" />
 
-  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3515150705911305"
-     crossorigin="anonymous"></script>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3515150705911305" crossorigin="anonymous"></script>
 
   <style>
     .hero-title {
@@ -94,6 +92,7 @@
   }
   </script>
 </head>
+
 <body style="background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);">
   
   <header>
@@ -103,8 +102,12 @@
     </p>
   </header>
 
-  <div id="root"></div>
+  <div id="root">
+    <div style="text-align:center; padding:2rem; color:white;">
+      ⏳ Cargando clima en tiempo real...
+    </div>
+  </div>
 
-  <script type="module" src="/src/main.jsx"></script>
+  <script type="module" src="/src/main.jsx" defer></script>
 </body>
 </html>

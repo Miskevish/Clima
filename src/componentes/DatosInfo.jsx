@@ -87,7 +87,6 @@ const DatosInfo = () => {
     }
     obtenerDolar();
 
-    /** ✅ Cargar los anuncios solo una vez **/
     if (window.adsbygoogle && process.env.NODE_ENV === "production") {
       try {
         (window.adsbygoogle = window.adsbygoogle || []).push({});
@@ -95,7 +94,7 @@ const DatosInfo = () => {
         console.warn("AdSense ya cargado, evitando duplicado.");
       }
     }
-  }, []); // <-- Solo se ejecuta una vez
+  }, []);
 
   const obtenerIcono = (condicion) => {
     const desc = condicion.toLowerCase();
@@ -239,7 +238,7 @@ const DatosInfo = () => {
             </div>
           )}
 
-          {/* ✅ Google Ads Automáticos (sin duplicados) */}
+          {/* Google Ads Automáticos (sin duplicados) */}
           <div className="ad-space">
             <ins
               className="adsbygoogle"

@@ -195,10 +195,10 @@
 }
 
 .ad-space:first-of-type {
-  height: 600px; /* 300x600 */
+  height: 600px; 
 }
 .ad-space:last-of-type {
-  height: 250px; /* 300x250 */
+  height: 250px; 
 }
 
 @media (max-width: 1024px) {
@@ -255,28 +255,24 @@
   }
 }
 
-/* 🔥 Tablets */
 @media (max-width: 1024px) {
   .content-layout {
-    grid-template-columns: 2fr 1fr; /* Más espacio al clima */
+    grid-template-columns: 2fr 1fr; 
   }
   .forecast-grid {
     grid-template-columns: repeat(4, 1fr);
   }
 }
 
-/* 🔥 Móviles normales */
 @media (max-width: 768px) {
   .content-layout {
-    grid-template-columns: 1fr; /* UNA sola columna */
+    grid-template-columns: 1fr; 
   }
 
-  /* ✅ Pronóstico en 2 columnas en móviles */
   .forecast-grid {
     grid-template-columns: repeat(2, 1fr);
   }
 
-  /* ✅ Buscador SIEMPRE arriba en móviles */
   .search-inline {
     position: relative;
     top: 0;
@@ -285,7 +281,6 @@
     margin-bottom: 10px;
   }
 
-  /* ✅ Ocultar anuncios laterales y solo mostrar UNO abajo */
   .sidebar {
     margin-top: 20px;
   }
@@ -294,29 +289,25 @@
   }
   .ad-space:last-of-type {
     width: 100%;
-    height: 250px; /* ✅ Un solo anuncio */
+    height: 250px; 
   }
 
-  /* ✅ Clima actual se apila bonito */
   .current-weather-body {
     flex-direction: column;
     align-items: center;
     text-align: center;
   }
 
-  /* ✅ Sin scroll lateral */
   .clean-layout {
     overflow-x: hidden;
   }
 
-  /* ✅ Ajustar iconos para pantallas medianas */
   .big-icon {
     width: 100px;
     height: 100px;
   }
 }
 
-/* 🔥 Móviles MUY pequeños (máximo 480px) */
 @media (max-width: 480px) {
   .highlight-card {
     padding: 15px;
@@ -358,13 +349,12 @@
   }
 }
 
-/* ✅ AJUSTES SOLO PARA ESCRITORIO (PC) */
 @media (min-width: 1025px) {
 
-  /* 🔹 Buscador más arriba y mejor alineado */
+
   .search-inline {
     position: absolute;
-    top: 10px; /* lo deja casi pegado a la parte superior de la card */
+    top: 10px; 
     right: 20px;
     display: flex;
     align-items: center;
@@ -392,7 +382,6 @@
     background: linear-gradient(135deg, #4facfe, #00f2fe);
   }
 
-  /* 🔹 Espacios publicitarios EXACTOS para Google Ads */
   .sidebar {
     display: flex;
     flex-direction: column;
@@ -412,7 +401,6 @@
 }
 
 
-/* 🔥 Pantallas ULTRA pequeñas (máximo 360px, ej. 320x560) */
 @media (max-width: 360px) {
   body, .clean-layout {
     padding: 10px;
@@ -448,7 +436,7 @@
   }
 
   .forecast-grid {
-    grid-template-columns: 1fr; /* ✅ 1 tarjeta por fila para que entre bien */
+    grid-template-columns: 1fr; 
   }
 
   .forecast-card img {
@@ -462,7 +450,7 @@
   }
 
   .ad-space:last-of-type {
-    height: 200px; /* Más pequeño en pantallas diminutas */
+    height: 200px; 
   }
 }
 

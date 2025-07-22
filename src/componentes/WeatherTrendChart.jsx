@@ -11,7 +11,6 @@ import {
   Legend,
 } from "chart.js";
 
-// Registramos los módulos que necesita Chart.js
 ChartJS.register(
   CategoryScale,
   LinearScale,
@@ -23,7 +22,6 @@ ChartJS.register(
 );
 
 const WeatherTrendChart = ({ forecast }) => {
-  // Extraemos fechas y temperaturas
   const labels = forecast.map((day) =>
     new Date(day.date).toLocaleDateString("es-ES", {
       weekday: "short",

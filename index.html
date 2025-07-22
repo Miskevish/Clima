@@ -4,37 +4,45 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <title>SkyWatch - Clima en tiempo real + Pronóstico 7 días + Dólar Blue</title>
+  <!-- ✅ Título SEO optimizado -->
+  <title>SkyWatch - Clima en tiempo real, pronóstico 7 días y dólar blue</title>
 
-  <meta name="description" content="Consulta el clima en tiempo real, pronóstico semanal, dólar blue y oficial. SkyWatch: la app más completa para Argentina y Latinoamérica.">
+  <!-- ✅ Meta descripción mejorada -->
+  <meta name="description" content="Consulta el clima en tiempo real y el pronóstico extendido de 7 días para tu ciudad. Además, verifica el dólar blue y oficial en Argentina y Latinoamérica. SkyWatch: clima actualizado al instante.">
 
-  <meta name="keywords" content="clima, pronóstico, tiempo real, dólar blue, dólar oficial, argentina, latinoamérica, clima hoy, pronóstico semanal, tiempo exacto">
+  <!-- ✅ Palabras clave optimizadas -->
+  <meta name="keywords" content="clima en tiempo real, pronóstico del tiempo, pronóstico semanal, dólar blue hoy, dólar oficial, clima argentina, clima latinoamérica, temperatura actual, tiempo exacto, pronóstico meteorológico">
 
   <meta name="author" content="SkyWatch Team">
   <meta name="robots" content="index, follow">
 
-  <!-- OpenGraph -->
-  <meta property="og:title" content="🌤 SkyWatch - Clima en tiempo real + Pronóstico 7 días" />
-  <meta property="og:description" content="Consulta el clima actual, pronóstico semanal, dólar blue y oficial. SkyWatch: clima premium para Argentina y LATAM." />
-  <meta property="og:image" content="/preview.png" />
-  <meta property="og:url" content="https://skywatch.app" />
+  <!-- ✅ URL canónica -->
+  <link rel="canonical" href="https://watchsky.netlify.app/" />
+
+  <!-- ✅ Open Graph -->
+  <meta property="og:title" content="🌤 SkyWatch - Clima en tiempo real y pronóstico semanal" />
+  <meta property="og:description" content="Consulta el clima actual, el pronóstico semanal y el dólar blue en tiempo real. SkyWatch te da la mejor información meteorológica en Argentina y LATAM." />
+  <meta property="og:image" content="https://watchsky.netlify.app/preview.png" />
+  <meta property="og:url" content="https://watchsky.netlify.app/" />
   <meta property="og:type" content="website" />
 
+  <!-- ✅ Twitter Cards -->
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="SkyWatch - Clima en tiempo real + Dólar Blue">
-  <meta name="twitter:description" content="Consulta el clima actual, pronóstico semanal y dólar blue en Argentina.">
-  <meta name="twitter:image" content="/preview.png">
+  <meta name="twitter:title" content="SkyWatch - Clima en tiempo real y dólar blue">
+  <meta name="twitter:description" content="Pronóstico del clima en tiempo real, semanal y dólar blue en Argentina y Latinoamérica.">
+  <meta name="twitter:image" content="https://watchsky.netlify.app/preview.png">
 
-  <!-- Favicon -->
-  <link rel="icon" type="image/png" href="/public/sun.png" />
-  <link rel="apple-touch-icon" href="/public/sun.png" />
+  <!-- ✅ Favicon -->
+  <link rel="icon" type="image/png" href="/sun.png" />
+  <link rel="apple-touch-icon" href="/sun.png" />
   <meta name="theme-color" content="#0f2027" />
 
-  <!-- Google Fonts -->
+  <!-- ✅ Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
 
+  <!-- ✅ CSS principal -->
   <link rel="stylesheet" href="/style.css">
 
   <!-- ✅ Manifest PWA -->
@@ -44,9 +52,78 @@
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3515150705911305"
      crossorigin="anonymous"></script>
 
+  <!-- ✅ Estilos para el título SEO -->
+  <style>
+    .hero-title {
+      font-family: 'Poppins', sans-serif;
+      font-weight: 600;
+      font-size: 2.5rem;
+      text-align: center;
+      color: #ffffff;
+      margin-top: 2rem;
+    }
+
+    .hero-subtitle {
+      font-family: 'Poppins', sans-serif;
+      font-weight: 400;
+      font-size: 1.2rem;
+      text-align: center;
+      color: rgba(255, 255, 255, 0.85);
+      margin: 0.5rem auto 2rem;
+      max-width: 600px;
+    }
+
+    /* ✅ Ocultar subtítulo en móviles */
+    @media (max-width: 768px) {
+      .hero-subtitle {
+        display: none;
+      }
+      .hero-title {
+        font-size: 2rem;
+      }
+    }
+  </style>
+
+  <!-- ✅ Microdatos Schema.org JSON-LD para Clima -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "SkyWatch - Clima en tiempo real",
+    "url": "https://watchsky.netlify.app/",
+    "description": "Consulta el clima en tiempo real, pronóstico del tiempo para 7 días y cotización del dólar blue y oficial en Argentina y Latinoamérica.",
+    "applicationCategory": "WeatherForecast",
+    "operatingSystem": "Web",
+    "creator": {
+      "@type": "Organization",
+      "name": "SkyWatch Team"
+    },
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "USD"
+    },
+    "about": {
+      "@type": "Thing",
+      "name": "Weather, Climate, Pronóstico del tiempo"
+    }
+  }
+  </script>
 </head>
-<body>
+<body style="background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);">
+  
+  <!-- ✅ Sección SEO visible para Google -->
+  <header>
+    <h1 class="hero-title">SkyWatch - Clima en tiempo real</h1>
+    <p class="hero-subtitle">
+      Consulta el <strong>clima actualizado al instante</strong>, el pronóstico extendido de 7 días y la cotización del dólar blue en Argentina y Latinoamérica.
+    </p>
+  </header>
+
+  <!-- React root -->
   <div id="root"></div>
+
+  <!-- Script principal -->
   <script type="module" src="/src/main.jsx"></script>
 </body>
 </html>

@@ -86,7 +86,16 @@ const DatosInfo = () => {
       obtenerClima("Buenos Aires");
     }
     obtenerDolar();
-  }, []);
+
+    /** ✅ Cargar los anuncios solo una vez **/
+    if (window.adsbygoogle && process.env.NODE_ENV === "production") {
+      try {
+        (window.adsbygoogle = window.adsbygoogle || []).push({});
+      } catch (e) {
+        console.warn("AdSense ya cargado, evitando duplicado.");
+      }
+    }
+  }, []); // <-- Solo se ejecuta una vez
 
   const obtenerIcono = (condicion) => {
     const desc = condicion.toLowerCase();
@@ -105,12 +114,11 @@ const DatosInfo = () => {
   return (
     <div className="clean-layout fade-in">
       <div className="content-layout">
-        {/* COLUMNA PRINCIPAL */}
+        {/* ✅ COLUMNA PRINCIPAL */}
         <div className="main-section">
           {/* CLIMA ACTUAL */}
           {climaActual && (
             <div className="current-weather highlight-card">
-              {/* 🔹 Buscador SIEMPRE arriba */}
               <form onSubmit={handleBuscarCiudad} className="search-inline">
                 <input
                   type="text"
@@ -196,8 +204,9 @@ const DatosInfo = () => {
           )}
         </div>
 
-        {/* COLUMNA DERECHA: DÓLAR + ANUNCIOS */}
+        {/* ✅ COLUMNA DERECHA */}
         <aside className="sidebar">
+          {/* Dólar */}
           {dolar && (
             <div className="dollar-cards">
               <div className="dollar-card">
@@ -230,9 +239,26 @@ const DatosInfo = () => {
             </div>
           )}
 
-          <div className="ad-space">Espacio publicitario 300x600</div>
-          <div className="ad-space">Espacio publicitario 300x250</div>
-          <div className="ad-space">Espacio publicitario 300x250</div>
+          {/* ✅ Google Ads Automáticos (sin duplicados) */}
+          <div className="ad-space">
+            <ins
+              className="adsbygoogle"
+              style={{ display: "block" }}
+              data-ad-client="ca-pub-3515150705911305"
+              data-ad-format="auto"
+              data-full-width-responsive="true"
+            ></ins>
+          </div>
+
+          <div className="ad-space">
+            <ins
+              className="adsbygoogle"
+              style={{ display: "block" }}
+              data-ad-client="ca-pub-3515150705911305"
+              data-ad-format="auto"
+              data-full-width-responsive="true"
+            ></ins>
+          </div>
         </aside>
       </div>
     </div>

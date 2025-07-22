@@ -1,23 +1,49 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 
+import sunIcon from "../assets/weather-icons/sun.png";
+import moonIcon from "../assets/weather-icons/moon.png";
+import rainIcon from "../assets/weather-icons/rain.png";
+import stormIcon from "../assets/weather-icons/storm.png";
+
+import WeatherTrendChart from "./WeatherTrendChart";
+import "./DatosInfo.css";
+
 const DatosInfo = () => {
   const [climaActual, setClimaActual] = useState(null);
   const [pronostico, setPronostico] = useState([]);
+  const [ubicacion, setUbicacion] = useState("");
   const [ciudadBuscada, setCiudadBuscada] = useState("");
-  const [ubicacion, setUbicacion] = useState(null);
   const [error, setError] = useState(null);
   const [dolar, setDolar] = useState(null);
+  const [sugerencias, setSugerencias] = useState([]);
 
-  const API_KEY = import.meta.env.VITE_WEATHERAPI_KEY;
+  const WEATHER_KEY = import.meta.env.VITE_WEATHERAPI_KEY;
+  const GEODB_KEY = import.meta.env.VITE_GEODB_KEY;
 
-  // ✅ Obtener clima actual + pronóstico 7 días por nombre de ciudad
-  const obtenerClimaYPronostico = async (ciudad) => {
+  const obtenerSugerencias = async (query) => {
+    if (!query.trim()) return setSugerencias([]);
     try {
       const res = await axios.get(
-        `https://api.weatherapi.com/v1/forecast.json?key=${API_KEY}&q=${ciudad}&days=7&lang=es`
+        `https://wft-geo-db.p.rapidapi.com/v1/geo/cities?namePrefix=${query}&countryIds=AR`,
+        {
+          headers: {
+            "X-RapidAPI-Key": GEODB_KEY,
+            "X-RapidAPI-Host": "wft-geo-db.p.rapidapi.com",
+          },
+        }
       );
+      setSugerencias(res.data.data.slice(0, 5));
+    } catch (err) {
+      console.error("Error obteniendo sugerencias:", err);
+    }
+  };
 
+  const obtenerClima = async (ciudad) => {
+    try {
+      const res = await axios.get(
+        `https://api.weatherapi.com/v1/forecast.json?key=${WEATHER_KEY}&q=${ciudad}&days=7&lang=es`
+      );
       setClimaActual(res.data.current);
       setPronostico(res.data.forecast.forecastday);
       setUbicacion(`${res.data.location.name}, ${res.data.location.country}`);
@@ -28,14 +54,13 @@ const DatosInfo = () => {
     }
   };
 
-  // ✅ Buscar manualmente una ciudad
-  const handleBuscarCiudad = async (e) => {
+  const handleBuscarCiudad = (e) => {
     e.preventDefault();
     if (!ciudadBuscada.trim()) return;
-    obtenerClimaYPronostico(ciudadBuscada);
+    obtenerClima(ciudadBuscada);
+    setSugerencias([]);
   };
 
-  // ✅ Obtener dólar blue y oficial
   const obtenerDolar = async () => {
     try {
       const res = await axios.get("https://api.bluelytics.com.ar/v2/latest");
@@ -45,156 +70,171 @@ const DatosInfo = () => {
     }
   };
 
-  // ✅ Detectar ubicación actual al cargar la página
   useEffect(() => {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
-        (position) => {
+        async (position) => {
           const lat = position.coords.latitude;
           const lon = position.coords.longitude;
-          obtenerClimaYPronostico(`${lat},${lon}`);
+          obtenerClima(`${lat},${lon}`);
         },
         () => {
-          console.warn("No se pudo obtener ubicación, usando Buenos Aires");
-          obtenerClimaYPronostico("Buenos Aires");
+          obtenerClima("Buenos Aires");
         }
       );
     } else {
-      console.warn("Geolocalización no soportada. Usando Buenos Aires.");
-      obtenerClimaYPronostico("Buenos Aires");
+      obtenerClima("Buenos Aires");
     }
-
-    // Obtener dólar siempre
     obtenerDolar();
   }, []);
 
-  // ✅ Formatear fecha para pronóstico
-  const formatearFecha = (fecha) => {
-    const opciones = { weekday: "long", day: "numeric", month: "short" };
-    return new Date(fecha).toLocaleDateString("es-ES", opciones);
+  const obtenerIcono = (condicion) => {
+    const desc = condicion.toLowerCase();
+    if (desc.includes("tormenta")) return stormIcon;
+    if (desc.includes("lluvia")) return rainIcon;
+
+    const hora = new Date().getHours();
+    const esNoche = hora >= 19 || hora < 6;
+
+    if (esNoche || desc.includes("noche") || desc.includes("luna")) {
+      return moonIcon;
+    }
+    return sunIcon;
   };
 
   return (
-    <div style={{ marginTop: "20px" }}>
-      <h2>📍 Datos en tiempo real</h2>
-
-      {/* 🔍 Buscador de ciudades */}
-      <form onSubmit={handleBuscarCiudad} style={{ marginBottom: "15px" }}>
-        <input
-          type="text"
-          placeholder="🔍 Buscar ciudad..."
-          value={ciudadBuscada}
-          onChange={(e) => setCiudadBuscada(e.target.value)}
-          style={{
-            padding: "10px",
-            borderRadius: "8px",
-            border: "none",
-            width: "70%",
-            marginRight: "10px",
-          }}
-        />
-        <button
-          type="submit"
-          style={{
-            padding: "10px 15px",
-            border: "none",
-            borderRadius: "8px",
-            backgroundColor: "#4a90e2",
-            color: "white",
-            cursor: "pointer",
-          }}
-        >
-          Buscar
-        </button>
-      </form>
-
-      {/* ⚠️ Mensaje de error */}
-      {error && <p>⚠️ {error}</p>}
-
-      {/* 🌤️ CLIMA ACTUAL */}
-      {climaActual && (
-        <div
-          style={{
-            padding: "20px",
-            borderRadius: "12px",
-            background: "rgba(255,255,255,0.1)",
-            backdropFilter: "blur(10px)",
-            color: "#fff",
-            marginBottom: "20px",
-          }}
-        >
-          <h3>
-            🌍 {ubicacion}: {climaActual.temp_c}°C
-          </h3>
-          <img
-            src={`https:${climaActual.condition.icon}`}
-            alt="icono clima"
-            style={{ width: "50px" }}
-          />
-          <p style={{ textTransform: "capitalize" }}>
-            {climaActual.condition.text}
-          </p>
-          <p>🌡️ Sensación térmica: {climaActual.feelslike_c}°C</p>
-          <p>💧 Humedad: {climaActual.humidity}%</p>
-          <p>💨 Viento: {climaActual.wind_kph} km/h</p>
-        </div>
-      )}
-
-      {/* 📅 PRONÓSTICO 7 DÍAS */}
-      {pronostico.length > 0 && (
-        <>
-          <h3>📅 Pronóstico semanal</h3>
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "repeat(auto-fill, minmax(120px, 1fr))",
-              gap: "12px",
-            }}
-          >
-            {pronostico.map((dia, idx) => (
-              <div
-                key={idx}
-                style={{
-                  padding: "12px",
-                  borderRadius: "12px",
-                  background: "rgba(255,255,255,0.15)",
-                  color: "#fff",
-                  textAlign: "center",
-                }}
-              >
-                <p style={{ fontWeight: "bold" }}>{formatearFecha(dia.date)}</p>
-                <img
-                  src={`https:${dia.day.condition.icon}`}
-                  alt="icono clima"
-                  style={{ width: "50px" }}
+    <div className="clean-layout fade-in">
+      <div className="content-layout">
+        {/* COLUMNA PRINCIPAL */}
+        <div className="main-section">
+          {/* CLIMA ACTUAL */}
+          {climaActual && (
+            <div className="current-weather highlight-card">
+              {/* 🔹 Buscador SIEMPRE arriba */}
+              <form onSubmit={handleBuscarCiudad} className="search-inline">
+                <input
+                  type="text"
+                  placeholder="Buscar ciudad..."
+                  value={ciudadBuscada}
+                  onChange={(e) => {
+                    setCiudadBuscada(e.target.value);
+                    obtenerSugerencias(e.target.value);
+                  }}
                 />
-                <p style={{ textTransform: "capitalize" }}>
-                  {dia.day.condition.text}
-                </p>
-                <p>☀️ Max: {dia.day.maxtemp_c}°C</p>
-                <p>❄️ Min: {dia.day.mintemp_c}°C</p>
-                <p>💧 {dia.day.daily_chance_of_rain}% lluvia</p>
+                <button type="submit">Buscar</button>
+                {sugerencias.length > 0 && (
+                  <ul className="suggestions">
+                    {sugerencias.map((sug, idx) => (
+                      <li
+                        key={idx}
+                        onClick={() => {
+                          setCiudadBuscada(`${sug.city}, ${sug.region}`);
+                          obtenerClima(`${sug.city}, ${sug.region}`);
+                          setSugerencias([]);
+                        }}
+                      >
+                        {sug.city}, {sug.region}
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </form>
+
+              <h2>
+                {ubicacion}: {climaActual.temp_c}°C
+              </h2>
+
+              <div className="current-weather-body">
+                <img
+                  className="big-icon"
+                  src={obtenerIcono(climaActual.condition.text)}
+                  alt="clima"
+                />
+                <div className="weather-details">
+                  <p>{climaActual.condition.text}</p>
+                  <p>🌡 Sensación térmica: {climaActual.feelslike_c}°C</p>
+                  <p>💧 Humedad: {climaActual.humidity}%</p>
+                  <p>🌬 Viento: {climaActual.wind_kph} km/h</p>
+                </div>
               </div>
-            ))}
-          </div>
-        </>
-      )}
+            </div>
+          )}
 
-      {/* 💵 DÓLAR BLUE + OFICIAL */}
-      {dolar && (
-        <div style={{ marginTop: "20px" }}>
-          <h3>💵 Dólar Blue</h3>
-          <p>
-            Compra: {dolar.blue.value_buy} | Venta: {dolar.blue.value_sell}
-          </p>
+          {/* PRONÓSTICO SEMANAL */}
+          {pronostico.length > 0 && (
+            <div className="forecast highlight-card">
+              <h3>📅 Pronóstico semanal</h3>
+              <div className="forecast-grid">
+                {pronostico.map((dia, idx) => (
+                  <div key={idx} className="forecast-card">
+                    <p className="forecast-day">
+                      {new Date(dia.date).toLocaleDateString("es-ES", {
+                        weekday: "short",
+                        day: "numeric",
+                        month: "short",
+                      })}
+                    </p>
+                    <img
+                      src={obtenerIcono(dia.day.condition.text)}
+                      alt="clima"
+                    />
+                    <p>{dia.day.condition.text}</p>
+                    <p>☀️ Max: {dia.day.maxtemp_c}°C</p>
+                    <p>❄️ Min: {dia.day.mintemp_c}°C</p>
+                    <p>💧 {dia.day.daily_chance_of_rain}% lluvia</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
 
-          <h3>🏦 Dólar Oficial</h3>
-          <p>
-            Compra: {dolar.oficial.value_buy} | Venta:{" "}
-            {dolar.oficial.value_sell}
-          </p>
+          {/* GRÁFICO DE TENDENCIA SEMANAL */}
+          {pronostico.length > 0 && (
+            <div className="highlight-card">
+              <WeatherTrendChart forecast={pronostico} />
+            </div>
+          )}
         </div>
-      )}
+
+        {/* COLUMNA DERECHA: DÓLAR + ANUNCIOS */}
+        <aside className="sidebar">
+          {dolar && (
+            <div className="dollar-cards">
+              <div className="dollar-card">
+                <img
+                  src="https://cdn-icons-png.flaticon.com/512/3135/3135706.png"
+                  alt="blue"
+                />
+                <div>
+                  <h4>Dólar Blue</h4>
+                  <p>
+                    Compra: {dolar.blue.value_buy} | Venta:{" "}
+                    {dolar.blue.value_sell}
+                  </p>
+                </div>
+              </div>
+
+              <div className="dollar-card">
+                <img
+                  src="https://cdn-icons-png.flaticon.com/512/3443/3443338.png"
+                  alt="oficial"
+                />
+                <div>
+                  <h4>Dólar Oficial</h4>
+                  <p>
+                    Compra: {dolar.oficial.value_buy} | Venta:{" "}
+                    {dolar.oficial.value_sell}
+                  </p>
+                </div>
+              </div>
+            </div>
+          )}
+
+          <div className="ad-space">Espacio publicitario 300x600</div>
+          <div className="ad-space">Espacio publicitario 300x250</div>
+          <div className="ad-space">Espacio publicitario 300x250</div>
+        </aside>
+      </div>
     </div>
   );
 };

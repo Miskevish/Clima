@@ -11,9 +11,9 @@
   <meta name="keywords" content="clima, pronóstico, tiempo real, dólar blue, dólar oficial, argentina, latinoamérica, clima hoy, pronóstico semanal, tiempo exacto">
 
   <meta name="author" content="SkyWatch Team">
-
   <meta name="robots" content="index, follow">
 
+  <!-- OpenGraph -->
   <meta property="og:title" content="🌤 SkyWatch - Clima en tiempo real + Pronóstico 7 días" />
   <meta property="og:description" content="Consulta el clima actual, pronóstico semanal, dólar blue y oficial. SkyWatch: clima premium para Argentina y LATAM." />
   <meta property="og:image" content="/preview.png" />
@@ -25,34 +25,28 @@
   <meta name="twitter:description" content="Consulta el clima actual, pronóstico semanal y dólar blue en Argentina.">
   <meta name="twitter:image" content="/preview.png">
 
+  <!-- Favicon -->
   <link rel="icon" type="image/png" href="/public/sun.png" />
   <link rel="apple-touch-icon" href="/public/sun.png" />
-
   <meta name="theme-color" content="#0f2027" />
 
+  <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
 
   <link rel="stylesheet" href="/style.css">
 
-  <!-- ✅ Manifest para PWA (si luego quieres instalarla como app) -->
+  <!-- ✅ Manifest PWA -->
   <link rel="manifest" href="/manifest.json" />
 
-  <!-- ✅ Google Analytics (opcional) -->
-  <!-- <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-    gtag('config', 'G-XXXXXXXXXX');
-  </script> -->
+  <!-- ✅ Google AdSense -->
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3515150705911305"
+     crossorigin="anonymous"></script>
 
 </head>
 <body>
   <div id="root"></div>
-  
-  <!-- ✅ Script principal de React -->
   <script type="module" src="/src/main.jsx"></script>
 </body>
 </html>

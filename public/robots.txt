@@ -2,3 +2,4 @@ User-agent: *
 Allow: /
 
 Sitemap: https://watchsky.netlify.app/sitemap.xml
+Host: https://watchsky.netlify.app

@@ -1,10 +1,9 @@
 import React from "react";
 import Particles from "react-tsparticles";
-import { loadSlim } from "tsparticles-slim"; // ✅ Usa slim para evitar el error
+import { loadSlim } from "tsparticles-slim"; 
 
 const BackgroundParticles = () => {
   const particlesInit = async (engine) => {
-    // ✅ Carga solo las funciones necesarias para evitar checkVersion
     await loadSlim(engine);
   };
 
@@ -55,7 +54,7 @@ const BackgroundParticles = () => {
               },
             },
           },
-          detectRetina: true, // ✅ versión correcta para retina
+          detectRetina: true, 
         }}
       />
     </div>

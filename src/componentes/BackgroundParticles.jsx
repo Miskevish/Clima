@@ -1,21 +1,22 @@
 import React from "react";
 import Particles from "react-tsparticles";
-import { loadFull } from "tsparticles";
+import { loadSlim } from "tsparticles-slim"; // ✅ Usa slim para evitar el error
 
 const BackgroundParticles = () => {
-  const particlesInit = async (main) => {
-    await loadFull(main);
+  const particlesInit = async (engine) => {
+    // ✅ Carga solo las funciones necesarias para evitar checkVersion
+    await loadSlim(engine);
   };
 
   return (
     <div
       style={{
-        position: "fixed", 
+        position: "fixed",
         top: 0,
         left: 0,
         width: "100%",
         height: "100%",
-        zIndex: 0, 
+        zIndex: 0,
       }}
     >
       <Particles
@@ -23,38 +24,38 @@ const BackgroundParticles = () => {
         init={particlesInit}
         options={{
           background: {
-            color: "transparent", 
+            color: "transparent",
           },
           particles: {
             number: {
-              value: 80, 
+              value: 80,
             },
             color: {
-              value: "#ffffff", 
+              value: "#ffffff",
             },
             shape: {
-              type: "circle", 
+              type: "circle",
             },
             opacity: {
-              value: 0.3, 
+              value: 0.3,
             },
             size: {
-              value: 3, 
+              value: 3,
             },
             move: {
               enable: true,
-              speed: 1, 
+              speed: 1,
             },
           },
           interactivity: {
             events: {
               onHover: {
                 enable: true,
-                mode: "repulse", 
+                mode: "repulse",
               },
             },
           },
-          retina_detect: true, 
+          detectRetina: true, // ✅ versión correcta para retina
         }}
       />
     </div>

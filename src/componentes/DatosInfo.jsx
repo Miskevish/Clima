@@ -3,8 +3,13 @@ import axios from "axios";
 
 import sunIcon from "../assets/weather-icons/sun.png";
 import moonIcon from "../assets/weather-icons/moon.png";
-import rainIcon from "../assets/weather-icons/rain.png";
+import lluviaLigeraIcon from "../assets/weather-icons/lluvia-ligera.png";
+import lluviaIntensaIcon from "../assets/weather-icons/lluvia-intensa.png";
+import lloviznaIcon from "../assets/weather-icons/llovizna.png";
 import stormIcon from "../assets/weather-icons/storm.png";
+import parcialmenteNubladoIcon from "../assets/weather-icons/parcialmente-nublado.png";
+import parcialmenteNubladoNocheIcon from "../assets/weather-icons/parcialmente-nublado-noche.png";
+import nubladoIcon from "../assets/weather-icons/nublado.png";
 
 import WeatherTrendChart from "./WeatherTrendChart";
 import "./DatosInfo.css";
@@ -71,6 +76,7 @@ const DatosInfo = () => {
   };
 
   useEffect(() => {
+    obtenerClima("Buenos Aires, Argentina");
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         async (position) => {
@@ -79,57 +85,71 @@ const DatosInfo = () => {
           obtenerClima(`${lat},${lon}`);
         },
         () => {
-          obtenerClima("Buenos Aires");
+          console.log(
+            "Geolocalización rechazada, usando Buenos Aires por defecto"
+          );
         }
       );
-    } else {
-      obtenerClima("Buenos Aires");
     }
     obtenerDolar();
+  }, []);
 
-    /** ✅ Cargar los anuncios solo una vez **/
-    if (window.adsbygoogle && process.env.NODE_ENV === "production") {
-      try {
-        (window.adsbygoogle = window.adsbygoogle || []).push({});
-      } catch (e) {
-        console.warn("AdSense ya cargado, evitando duplicado.");
-      }
+  useEffect(() => {
+    if (ciudadBuscada.trim().length < 3) {
+      setSugerencias([]);
+      return;
     }
-  }, []); // <-- Solo se ejecuta una vez
+
+    const delay = setTimeout(() => {
+      obtenerSugerencias(ciudadBuscada);
+    }, 1000); 
+
+    return () => clearTimeout(delay);
+  }, [ciudadBuscada]);
 
   const obtenerIcono = (condicion) => {
     const desc = condicion.toLowerCase();
+
     if (desc.includes("tormenta")) return stormIcon;
-    if (desc.includes("lluvia")) return rainIcon;
+
+    if (desc.includes("lluvia intensa")) return lluviaIntensaIcon;
+    if (desc.includes("lluvia moderada")) return lluviaLigeraIcon; 
+    if (desc.includes("llovizna")) return lloviznaIcon;
+    if (desc.includes("lluvia")) return lluviaLigeraIcon;
+
+    if (desc.includes("parcialmente nublado")) {
+      const hora = new Date().getHours();
+      const esNoche = hora >= 19 || hora < 6;
+      return esNoche ? parcialmenteNubladoNocheIcon : parcialmenteNubladoIcon;
+    }
+    if (desc.includes("nublado")) return nubladoIcon;
 
     const hora = new Date().getHours();
     const esNoche = hora >= 19 || hora < 6;
-
     if (esNoche || desc.includes("noche") || desc.includes("luna")) {
       return moonIcon;
     }
+
     return sunIcon;
   };
 
   return (
     <div className="clean-layout fade-in">
       <div className="content-layout">
-        {/* ✅ COLUMNA PRINCIPAL */}
         <div className="main-section">
-          {/* CLIMA ACTUAL */}
           {climaActual && (
             <div className="current-weather highlight-card">
-              <form onSubmit={handleBuscarCiudad} className="search-inline">
-                <input
-                  type="text"
-                  placeholder="Buscar ciudad..."
-                  value={ciudadBuscada}
-                  onChange={(e) => {
-                    setCiudadBuscada(e.target.value);
-                    obtenerSugerencias(e.target.value);
-                  }}
-                />
-                <button type="submit">Buscar</button>
+              <div className="search-container">
+                <form onSubmit={handleBuscarCiudad} className="search-inline">
+                  <input
+                    type="text"
+                    placeholder="Buscar ciudad..."
+                    value={ciudadBuscada}
+                    onChange={(e) => setCiudadBuscada(e.target.value)}
+                  />
+                  <button type="submit">Buscar</button>
+                </form>
+
                 {sugerencias.length > 0 && (
                   <ul className="suggestions">
                     {sugerencias.map((sug, idx) => (
@@ -146,14 +166,13 @@ const DatosInfo = () => {
                     ))}
                   </ul>
                 )}
-              </form>
+              </div>
 
               <h2>
                 {ubicacion}: {climaActual.temp_c}°C
               </h2>
 
               <div className="current-weather-body">
-                {/* ✅ Lazy loading + dimensiones */}
                 <img
                   className="big-icon"
                   src={obtenerIcono(climaActual.condition.text)}
@@ -172,7 +191,6 @@ const DatosInfo = () => {
             </div>
           )}
 
-          {/* PRONÓSTICO SEMANAL */}
           {pronostico.length > 0 && (
             <div className="forecast highlight-card">
               <h3>📅 Pronóstico semanal</h3>
@@ -186,7 +204,6 @@ const DatosInfo = () => {
                         month: "short",
                       })}
                     </p>
-                    {/* ✅ Lazy loading + dimensiones */}
                     <img
                       src={obtenerIcono(dia.day.condition.text)}
                       alt="clima"
@@ -204,7 +221,6 @@ const DatosInfo = () => {
             </div>
           )}
 
-          {/* GRÁFICO DE TENDENCIA SEMANAL */}
           {pronostico.length > 0 && (
             <div className="highlight-card">
               <WeatherTrendChart forecast={pronostico} />
@@ -212,13 +228,10 @@ const DatosInfo = () => {
           )}
         </div>
 
-        {/* ✅ COLUMNA DERECHA */}
         <aside className="sidebar">
-          {/* Dólar */}
           {dolar && (
             <div className="dollar-cards">
               <div className="dollar-card">
-                {/* ✅ Lazy loading + dimensiones */}
                 <img
                   src="https://cdn-icons-png.flaticon.com/512/3135/3135706.png"
                   alt="blue"
@@ -236,7 +249,6 @@ const DatosInfo = () => {
               </div>
 
               <div className="dollar-card">
-                {/* ✅ Lazy loading + dimensiones */}
                 <img
                   src="https://cdn-icons-png.flaticon.com/512/3443/3443338.png"
                   alt="oficial"
@@ -254,27 +266,6 @@ const DatosInfo = () => {
               </div>
             </div>
           )}
-
-          {/* ✅ Google Ads Automáticos (sin duplicados) */}
-          <div className="ad-space">
-            <ins
-              className="adsbygoogle"
-              style={{ display: "block" }}
-              data-ad-client="ca-pub-3515150705911305"
-              data-ad-format="auto"
-              data-full-width-responsive="true"
-            ></ins>
-          </div>
-
-          <div className="ad-space">
-            <ins
-              className="adsbygoogle"
-              style={{ display: "block" }}
-              data-ad-client="ca-pub-3515150705911305"
-              data-ad-format="auto"
-              data-full-width-responsive="true"
-            ></ins>
-          </div>
         </aside>
       </div>
     </div>

@@ -1,5 +1,9 @@
+# Permitir que todos los buscadores indexen el sitio
 User-agent: *
 Allow: /
 
+# URL del sitemap para que Google lo detecte automáticamente
 Sitemap: https://watchsky.netlify.app/sitemap.xml
-Host: https://watchsky.netlify.app
+
+# Host preferido (opcional, ayuda a buscadores)
+Host: watchsky.netlify.app

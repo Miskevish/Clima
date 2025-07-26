@@ -1,5 +1,7 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, lazy, Suspense } from "react";
 import axios from "axios";
+
+const WeatherTrendChart = lazy(() => import("./WeatherTrendChart"));
 
 import sunIcon from "../assets/weather-icons/sun.png";
 import moonIcon from "../assets/weather-icons/moon.png";
@@ -11,7 +13,6 @@ import parcialmenteNubladoIcon from "../assets/weather-icons/parcialmente-nublad
 import parcialmenteNubladoNocheIcon from "../assets/weather-icons/parcialmente-nublado-noche.png";
 import nubladoIcon from "../assets/weather-icons/nublado.png";
 
-import WeatherTrendChart from "./WeatherTrendChart";
 import "./DatosInfo.css";
 
 const DatosInfo = () => {
@@ -40,7 +41,7 @@ const DatosInfo = () => {
       );
       setSugerencias(res.data.data.slice(0, 5));
     } catch (err) {
-      console.error("Error obteniendo sugerencias:", err);
+      console.warn("⚠️ Error obteniendo sugerencias (posible límite API)", err);
     }
   };
 
@@ -77,33 +78,27 @@ const DatosInfo = () => {
 
   useEffect(() => {
     obtenerClima("Buenos Aires, Argentina");
+
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
-        async (position) => {
+        (position) => {
           const lat = position.coords.latitude;
           const lon = position.coords.longitude;
           obtenerClima(`${lat},${lon}`);
         },
-        () => {
-          console.log(
-            "Geolocalización rechazada, usando Buenos Aires por defecto"
-          );
-        }
+        () => console.log("Geolocalización rechazada, usando Buenos Aires")
       );
     }
+
     obtenerDolar();
   }, []);
 
   useEffect(() => {
-    if (ciudadBuscada.trim().length < 3) {
+    if (!ciudadBuscada.trim()) {
       setSugerencias([]);
       return;
     }
-
-    const delay = setTimeout(() => {
-      obtenerSugerencias(ciudadBuscada);
-    }, 1000); 
-
+    const delay = setTimeout(() => obtenerSugerencias(ciudadBuscada), 500);
     return () => clearTimeout(delay);
   }, [ciudadBuscada]);
 
@@ -111,9 +106,8 @@ const DatosInfo = () => {
     const desc = condicion.toLowerCase();
 
     if (desc.includes("tormenta")) return stormIcon;
-
     if (desc.includes("lluvia intensa")) return lluviaIntensaIcon;
-    if (desc.includes("lluvia moderada")) return lluviaLigeraIcon; 
+    if (desc.includes("lluvia moderada")) return lluviaLigeraIcon;
     if (desc.includes("llovizna")) return lloviznaIcon;
     if (desc.includes("lluvia")) return lluviaLigeraIcon;
 
@@ -171,12 +165,11 @@ const DatosInfo = () => {
               <h2>
                 {ubicacion}: {climaActual.temp_c}°C
               </h2>
-
               <div className="current-weather-body">
                 <img
                   className="big-icon"
                   src={obtenerIcono(climaActual.condition.text)}
-                  alt="clima"
+                  alt={climaActual.condition.text}
                   width="80"
                   height="80"
                   loading="lazy"
@@ -206,7 +199,7 @@ const DatosInfo = () => {
                     </p>
                     <img
                       src={obtenerIcono(dia.day.condition.text)}
-                      alt="clima"
+                      alt={dia.day.condition.text}
                       width="64"
                       height="64"
                       loading="lazy"
@@ -221,9 +214,16 @@ const DatosInfo = () => {
             </div>
           )}
 
+          {/* ✅ Lazy load solo cuando hay pronóstico */}
           {pronostico.length > 0 && (
             <div className="highlight-card">
-              <WeatherTrendChart forecast={pronostico} />
+              <Suspense
+                fallback={
+                  <p style={{ color: "white" }}>⏳ Cargando gráfico...</p>
+                }
+              >
+                <WeatherTrendChart forecast={pronostico} />
+              </Suspense>
             </div>
           )}
         </div>

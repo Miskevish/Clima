@@ -5,7 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
   <title>SkyWatch - Clima en tiempo real, pronóstico 7 días y dólar blue</title>
-<!-- Google Analytics -->
+
+  <!-- Google Analytics -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-GBQK5SZE8R"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
@@ -13,8 +14,6 @@
     gtag('js', new Date());
     gtag('config', 'G-GBQK5SZE8R');
   </script>
-
-  
 
   <meta name="description" content="Consulta el clima en tiempo real y el pronóstico extendido de 7 días para tu ciudad. Además, verifica el dólar blue y oficial en Argentina y Latinoamérica. SkyWatch: clima actualizado al instante.">
   <meta name="keywords" content="clima en tiempo real, pronóstico del tiempo, pronóstico semanal, dólar blue hoy, dólar oficial, clima argentina, clima latinoamérica, temperatura actual, tiempo exacto, pronóstico meteorológico">
@@ -44,7 +43,6 @@
   <link rel="preload" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" as="style" onload="this.rel='stylesheet'">
   <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap"></noscript>
 
-  
   <link rel="manifest" href="/manifest.json" onerror="this.remove()" />
 
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3515150705911305" crossorigin="anonymous"></script>
@@ -121,5 +119,15 @@
   </div>
 
   <script type="module" src="/src/main.jsx" defer></script>
+
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/service-worker.js')
+          .then(() => console.log('✅ Service Worker registrado'))
+          .catch((err) => console.log('❌ Error Service Worker', err));
+      });
+    }
+  </script>
 </body>
 </html>

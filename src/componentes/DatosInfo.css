@@ -1,12 +1,12 @@
-.clean-layout {
-  width: 100%;
-  min-height: 100vh;
+body {
   background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
   color: white;
-  padding: 20px;
-  box-sizing: border-box;
+  overflow-x: hidden; 
+  font-family: 'Poppins', sans-serif;
+}
+
+.container-fluid {
   animation: fadeIn 0.8s ease-in-out;
-  overflow-x: hidden;
 }
 
 @keyframes fadeIn {
@@ -14,155 +14,61 @@
   to { opacity: 1; transform: translateY(0); }
 }
 
-.content-layout {
-  display: grid;
-  grid-template-columns: 3fr 1fr;
-  gap: 20px;
-}
-
-.main-section {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-}
-
-.highlight-card {
-  background: rgba(255, 255, 255, 0.05);
-  padding: 25px; 
+.card.bg-dark {
+  background: rgba(0, 0, 0, 0.4) !important;
+  border: none;
   border-radius: 15px;
-  backdrop-filter: blur(8px);
+  backdrop-filter: blur(6px);
+  color: white;
   transition: transform 0.3s ease;
-  position: relative;
-  z-index: 1;
-}
-.highlight-card:hover {
-  transform: scale(1.01);
 }
 
-.current-weather-body {
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  gap: 30px; 
-  position: relative;
-  z-index: 1;
+.card.bg-dark:hover {
+  transform: scale(1.02);
+}
+
+.input-group .form-control {
+  background: rgba(255, 255, 255, 0.1);
+  border: none;
+  color: white;
+}
+
+.input-group .form-control::placeholder {
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.input-group .btn {
+  background: linear-gradient(135deg, #4facfe, #00f2fe);
+  border: none;
+  color: white;
+  font-weight: bold;
+  transition: 0.3s ease;
+}
+
+.input-group .btn:hover {
+  transform: scale(1.05);
+  background: linear-gradient(135deg, #00f2fe, #4facfe);
+}
+
+.list-group-item {
+  background: rgba(255, 255, 255, 0.05);
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+.list-group-item:hover {
+  background: rgba(255, 255, 255, 0.2);
 }
 
 .big-icon {
-  width: 160px; 
+  width: 140px;
   height: auto;
   animation: float 4s infinite ease-in-out;
-  max-width: 100%;
-  position: relative;
-  z-index: 1;
   object-fit: contain;
 }
 @keyframes float {
   0%, 100% { transform: translateY(0); }
   50% { transform: translateY(-10px); }
-}
-
-.weather-details {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  font-size: 1.1rem; 
-  line-height: 1.6;
-}
-
-.search-container {
-  position: relative;
-  width: 100%;
-  max-width: 100%;
-  z-index: 10000;
-}
-
-.search-inline {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  background: rgba(255, 255, 255, 0.08);
-  padding: 10px;
-  border-radius: 12px;
-  backdrop-filter: blur(10px);
-  width: 100%;
-  max-width: 100%;
-}
-
-.search-inline input {
-  flex: 1;
-  padding: 10px 14px;
-  border: none;
-  border-radius: 8px;
-  background: rgba(255, 255, 255, 0.1);
-  color: white;
-  font-size: 15px;
-  min-width: 0;
-}
-.search-inline input::placeholder {
-  color: #fff;
-  opacity: 0.8;
-}
-
-.search-inline button {
-  background: linear-gradient(135deg, #4facfe, #00f2fe);
-  border: none;
-  padding: 10px 16px;
-  border-radius: 8px;
-  color: white;
-  font-weight: bold;
-  cursor: pointer;
-  transition: 0.3s ease;
-}
-.search-inline button:hover {
-  transform: scale(1.05);
-  background: linear-gradient(135deg, #00f2fe, #4facfe);
-}
-
-.suggestions {
-  position: absolute;
-  top: calc(100% + 4px);
-  left: 0;
-  width: 100%;
-  background: rgba(0, 0, 0, 0.95);
-  backdrop-filter: blur(8px);
-  border-radius: 8px;
-  list-style: none;
-  padding: 5px 0;
-  margin: 0;
-  z-index: 999999;
-  box-shadow: 0 8px 20px rgba(0,0,0,0.4);
-  max-height: 220px;
-  overflow-y: auto;
-  overflow-x: hidden;
-}
-
-.suggestions li {
-  padding: 8px;
-  cursor: pointer;
-  transition: background 0.2s;
-}
-
-.suggestions li:hover {
-  background: rgba(255, 255, 255, 0.2);
-}
-
-.forecast-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-  gap: 12px;
-  width: 100%;
-  box-sizing: border-box;
-}
-
-.forecast-card {
-  background: rgba(255, 255, 255, 0.08);
-  padding: 14px;
-  border-radius: 10px;
-  text-align: center;
-  transition: transform 0.2s;
-  position: relative;
-  z-index: 1;
 }
 
 .forecast-card img {
@@ -171,153 +77,26 @@
   object-fit: contain;
 }
 
-.dollar-cards {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  margin-bottom: 15px;
-}
-
-.dollar-card {
-  display: flex;
-  align-items: center;
-  background: rgba(255, 255, 255, 0.05);
-  padding: 12px;
-  border-radius: 12px;
-  gap: 12px;
-  backdrop-filter: blur(6px);
-  position: relative;
-  z-index: 1;
-}
-
-.dollar-card img {
-  width: 42px;
-  height: auto;
-  object-fit: contain;
-}
-
-.dollar-card h4 {
-  margin: 0;
-  font-size: 1rem;
-  color: #4facfe;
-}
-
-.sidebar {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-}
-
-@media (max-width: 1024px) {
-  .forecast-grid {
-    grid-template-columns: repeat(4, 1fr);
+@media (max-width: 992px) {
+  .big-icon {
+    width: 120px;
   }
 }
 
 @media (max-width: 768px) {
-  .content-layout {
-    grid-template-columns: 1fr; 
-  }
-
-  .current-weather-body {
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-  }
-
   .big-icon {
-    max-width: 110px;
-  }
-
-  .forecast-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-
-  .sidebar {
-    margin-top: 20px;
+    width: 100px;
   }
 }
 
 @media (max-width: 480px) {
-  
-  .highlight-card {
-    padding: 15px;
-    margin: 0 auto;
-  }
-
   .big-icon {
-    max-width: 85px;
-  }
-
-  .forecast-card img {
-    max-width: 45px;
-  }
-
-  .forecast-grid {
-    grid-template-columns: 1fr 1fr;
-    gap: 12px;
-    margin: 0 auto;
-  }
-
-  .forecast-card {
-    padding: 8px;
-    font-size: 0.85rem;
+    width: 80px;
   }
 }
 
-@media (max-width: 375px) {
-  .forecast-grid {
-    grid-template-columns: 1fr 1fr;
-    gap: 10px;
-    margin: 0 auto;
-  }
-
-  .highlight-card {
-    padding: 12px;
-  }
-
+@media (max-width: 360px) {
   .big-icon {
-    max-width: 75px;
-  }
-}
-
-@media (max-width: 340px) {
-  html, body {
-    width: 100%;
-    max-width: 100vw;
-    margin: 0 auto;
-    padding: 0;
-    overflow-x: hidden !important;
-  }
-
-  .clean-layout, 
-  .content-layout, 
-  .main-section,
-  .highlight-card,
-  .forecast-grid,
-  .forecast-card,
-  .search-container {
-    max-width: 100% !important;
-    width: 100% !important;
-    margin: 0 auto !important;
-    overflow-x: hidden !important;
-  }
-
-  .forecast-grid {
-    grid-template-columns: 1fr;
-    gap: 8px;
-  }
-
-  .forecast-card {
-    font-size: 0.8rem;
-    padding: 6px;
-  }
-
-  .forecast-card img {
-    max-width: 35px;
-  }
-
-  .big-icon {
-    max-width: 60px;
+    width: 65px;
   }
 }

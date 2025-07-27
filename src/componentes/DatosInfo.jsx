@@ -1,7 +1,5 @@
-import React, { useState, useEffect, lazy, Suspense } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
-
-const WeatherTrendChart = lazy(() => import("./WeatherTrendChart"));
 
 import sunIcon from "../assets/weather-icons/sun.png";
 import moonIcon from "../assets/weather-icons/moon.png";
@@ -13,6 +11,7 @@ import parcialmenteNubladoIcon from "../assets/weather-icons/parcialmente-nublad
 import parcialmenteNubladoNocheIcon from "../assets/weather-icons/parcialmente-nublado-noche.png";
 import nubladoIcon from "../assets/weather-icons/nublado.png";
 
+import WeatherTrendChart from "./WeatherTrendChart";
 import "./DatosInfo.css";
 
 const DatosInfo = () => {
@@ -41,7 +40,7 @@ const DatosInfo = () => {
       );
       setSugerencias(res.data.data.slice(0, 5));
     } catch (err) {
-      console.warn("⚠️ Error obteniendo sugerencias (posible límite API)", err);
+      console.error("Error obteniendo sugerencias:", err);
     }
   };
 
@@ -78,18 +77,20 @@ const DatosInfo = () => {
 
   useEffect(() => {
     obtenerClima("Buenos Aires, Argentina");
-
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
-        (position) => {
+        async (position) => {
           const lat = position.coords.latitude;
           const lon = position.coords.longitude;
           obtenerClima(`${lat},${lon}`);
         },
-        () => console.log("Geolocalización rechazada, usando Buenos Aires")
+        () => {
+          console.log(
+            "Geolocalización rechazada, usando Buenos Aires por defecto"
+          );
+        }
       );
     }
-
     obtenerDolar();
   }, []);
 
@@ -98,7 +99,9 @@ const DatosInfo = () => {
       setSugerencias([]);
       return;
     }
-    const delay = setTimeout(() => obtenerSugerencias(ciudadBuscada), 500);
+    const delay = setTimeout(() => {
+      obtenerSugerencias(ciudadBuscada);
+    }, 500);
     return () => clearTimeout(delay);
   }, [ciudadBuscada]);
 
@@ -106,6 +109,7 @@ const DatosInfo = () => {
     const desc = condicion.toLowerCase();
 
     if (desc.includes("tormenta")) return stormIcon;
+
     if (desc.includes("lluvia intensa")) return lluviaIntensaIcon;
     if (desc.includes("lluvia moderada")) return lluviaLigeraIcon;
     if (desc.includes("llovizna")) return lloviznaIcon;
@@ -128,55 +132,61 @@ const DatosInfo = () => {
   };
 
   return (
-    <div className="clean-layout fade-in">
-      <div className="content-layout">
-        <div className="main-section">
+    <div className="container-fluid py-3">
+      <div className="row">
+
+        <div className="col-12 col-lg-8 mb-4">
           {climaActual && (
-            <div className="current-weather highlight-card">
-              <div className="search-container">
-                <form onSubmit={handleBuscarCiudad} className="search-inline">
-                  <input
-                    type="text"
-                    placeholder="Buscar ciudad..."
-                    value={ciudadBuscada}
-                    onChange={(e) => setCiudadBuscada(e.target.value)}
-                  />
-                  <button type="submit">Buscar</button>
-                </form>
+            <div className="card shadow-lg p-3 mb-4 bg-dark text-light">
 
-                {sugerencias.length > 0 && (
-                  <ul className="suggestions">
-                    {sugerencias.map((sug, idx) => (
-                      <li
-                        key={idx}
-                        onClick={() => {
-                          setCiudadBuscada(`${sug.city}, ${sug.region}`);
-                          obtenerClima(`${sug.city}, ${sug.region}`);
-                          setSugerencias([]);
-                        }}
-                      >
-                        {sug.city}, {sug.region}
-                      </li>
-                    ))}
-                  </ul>
-                )}
-              </div>
+              <form
+                onSubmit={handleBuscarCiudad}
+                className="d-flex gap-2 mb-3 flex-wrap"
+              >
+                <input
+                  type="text"
+                  className="form-control"
+                  placeholder="Buscar ciudad..."
+                  value={ciudadBuscada}
+                  onChange={(e) => setCiudadBuscada(e.target.value)}
+                />
+                <button className="btn btn-primary">Buscar</button>
+              </form>
 
-              <h2>
+              {sugerencias.length > 0 && (
+                <ul className="list-group mb-3">
+                  {sugerencias.map((sug, idx) => (
+                    <li
+                      key={idx}
+                      className="list-group-item list-group-item-action"
+                      onClick={() => {
+                        setCiudadBuscada(`${sug.city}, ${sug.region}`);
+                        obtenerClima(`${sug.city}, ${sug.region}`);
+                        setSugerencias([]);
+                      }}
+                    >
+                      {sug.city}, {sug.region}
+                    </li>
+                  ))}
+                </ul>
+              )}
+
+              <h2 className="text-center">
                 {ubicacion}: {climaActual.temp_c}°C
               </h2>
-              <div className="current-weather-body">
+
+              <div className="d-flex align-items-center justify-content-center gap-4 flex-wrap">
                 <img
                   className="big-icon"
                   src={obtenerIcono(climaActual.condition.text)}
-                  alt={climaActual.condition.text}
-                  width="80"
-                  height="80"
+                  alt="clima"
+                  width="100"
+                  height="100"
                   loading="lazy"
                 />
-                <div className="weather-details">
+                <div>
                   <p>{climaActual.condition.text}</p>
-                  <p>🌡 Sensación térmica: {climaActual.feelslike_c}°C</p>
+                  <p>🌡 Sensación: {climaActual.feelslike_c}°C</p>
                   <p>💧 Humedad: {climaActual.humidity}%</p>
                   <p>🌬 Viento: {climaActual.wind_kph} km/h</p>
                 </div>
@@ -185,12 +195,12 @@ const DatosInfo = () => {
           )}
 
           {pronostico.length > 0 && (
-            <div className="forecast highlight-card">
+            <div className="card shadow-lg p-3 mb-4 bg-dark text-light">
               <h3>📅 Pronóstico semanal</h3>
-              <div className="forecast-grid">
+              <div className="row">
                 {pronostico.map((dia, idx) => (
-                  <div key={idx} className="forecast-card">
-                    <p className="forecast-day">
+                  <div key={idx} className="col-6 col-md-4 text-center mb-3">
+                    <p>
                       {new Date(dia.date).toLocaleDateString("es-ES", {
                         weekday: "short",
                         day: "numeric",
@@ -199,7 +209,7 @@ const DatosInfo = () => {
                     </p>
                     <img
                       src={obtenerIcono(dia.day.condition.text)}
-                      alt={dia.day.condition.text}
+                      alt="clima"
                       width="64"
                       height="64"
                       loading="lazy"
@@ -214,59 +224,34 @@ const DatosInfo = () => {
             </div>
           )}
 
-          {/* ✅ Lazy load solo cuando hay pronóstico */}
           {pronostico.length > 0 && (
-            <div className="highlight-card">
-              <Suspense
-                fallback={
-                  <p style={{ color: "white" }}>⏳ Cargando gráfico...</p>
-                }
-              >
-                <WeatherTrendChart forecast={pronostico} />
-              </Suspense>
+            <div className="card shadow-lg p-3 mb-4 bg-dark text-light">
+              <WeatherTrendChart forecast={pronostico} />
             </div>
           )}
         </div>
 
-        <aside className="sidebar">
+        <div className="col-12 col-lg-4">
           {dolar && (
-            <div className="dollar-cards">
-              <div className="dollar-card">
-                <img
-                  src="https://cdn-icons-png.flaticon.com/512/3135/3135706.png"
-                  alt="blue"
-                  width="48"
-                  height="48"
-                  loading="lazy"
-                />
-                <div>
-                  <h4>Dólar Blue</h4>
-                  <p>
-                    Compra: {dolar.blue.value_buy} | Venta:{" "}
-                    {dolar.blue.value_sell}
-                  </p>
-                </div>
+            <div className="card shadow-lg p-3 bg-dark text-light">
+              <h4 className="text-center mb-3">💵 Cotización Dólar</h4>
+              <div className="mb-3">
+                <h5>Dólar Blue</h5>
+                <p>
+                  Compra: {dolar.blue.value_buy} | Venta:{" "}
+                  {dolar.blue.value_sell}
+                </p>
               </div>
-
-              <div className="dollar-card">
-                <img
-                  src="https://cdn-icons-png.flaticon.com/512/3443/3443338.png"
-                  alt="oficial"
-                  width="48"
-                  height="48"
-                  loading="lazy"
-                />
-                <div>
-                  <h4>Dólar Oficial</h4>
-                  <p>
-                    Compra: {dolar.oficial.value_buy} | Venta:{" "}
-                    {dolar.oficial.value_sell}
-                  </p>
-                </div>
+              <div>
+                <h5>Dólar Oficial</h5>
+                <p>
+                  Compra: {dolar.oficial.value_buy} | Venta:{" "}
+                  {dolar.oficial.value_sell}
+                </p>
               </div>
             </div>
           )}
-        </aside>
+        </div>
       </div>
     </div>
   );

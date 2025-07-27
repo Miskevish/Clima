@@ -24,3 +24,46 @@ img, canvas, svg, video {
   height: auto !important;
   display: block;
 }
+
+
+html, body, #root {
+  width: 100% !important;
+  max-width: 100% !important;
+  overflow-x: hidden !important;
+  margin: 0;
+  padding: 0;
+}
+
+
+* {
+  box-sizing: border-box !important;
+  max-width: 100% !important;
+}
+
+
+@media (max-width: 768px) {
+  .content-layout {
+    display: flex !important;
+    flex-direction: column !important;
+    width: 100% !important;
+    margin: 0 auto !important;
+  }
+
+  .forecast-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+    margin: 0 auto !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .forecast-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  .highlight-card,
+  .forecast-card,
+  .search-container {
+    padding: 10px !important;
+    margin: 0 auto !important;
+  }
+}

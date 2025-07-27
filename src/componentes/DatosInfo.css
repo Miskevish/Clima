@@ -7,6 +7,8 @@ body {
 
 .container-fluid {
   animation: fadeIn 0.8s ease-in-out;
+  max-width: 100%;
+  overflow-x: hidden;
 }
 
 @keyframes fadeIn {
@@ -21,6 +23,8 @@ body {
   backdrop-filter: blur(6px);
   color: white;
   transition: transform 0.3s ease;
+  max-width: 100%;
+  overflow: hidden;
 }
 
 .card.bg-dark:hover {
@@ -32,7 +36,6 @@ body {
   border: none;
   color: white;
 }
-
 .input-group .form-control::placeholder {
   color: rgba(255, 255, 255, 0.8);
 }
@@ -44,7 +47,6 @@ body {
   font-weight: bold;
   transition: 0.3s ease;
 }
-
 .input-group .btn:hover {
   transform: scale(1.05);
   background: linear-gradient(135deg, #00f2fe, #4facfe);
@@ -65,7 +67,9 @@ body {
   height: auto;
   animation: float 4s infinite ease-in-out;
   object-fit: contain;
+  max-width: 100%;
 }
+
 @keyframes float {
   0%, 100% { transform: translateY(0); }
   50% { transform: translateY(-10px); }
@@ -75,6 +79,20 @@ body {
   width: 55px;
   height: auto;
   object-fit: contain;
+  max-width: 100%;
+}
+
+.row {
+  flex-wrap: wrap;
+  margin-left: 0;
+  margin-right: 0;
+  max-width: 100%;
+}
+
+canvas, svg {
+  max-width: 100% !important;
+  height: auto !important;
+  display: block;
 }
 
 @media (max-width: 992px) {
@@ -87,16 +105,33 @@ body {
   .big-icon {
     width: 100px;
   }
+  .row {
+    flex-direction: column;
+    align-items: center;
+  }
+  .card.bg-dark {
+    width: 100% !important;
+  }
 }
 
 @media (max-width: 480px) {
   .big-icon {
     width: 80px;
   }
+  .forecast-card {
+    width: 100%;
+    text-align: center;
+  }
+  .row {
+    gap: 10px;
+  }
 }
 
 @media (max-width: 360px) {
   .big-icon {
     width: 65px;
+  }
+  .forecast-card img {
+    width: 40px;
   }
 }

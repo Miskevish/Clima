@@ -47,7 +47,7 @@ const DatosInfo = () => {
   const obtenerClima = async (ciudad) => {
     try {
       const res = await axios.get(
-        `https://api.weatherapi.com/v1/forecast.json?key=${WEATHER_KEY}&q=${ciudad}&days=7&lang=es`
+        `https://api.weatherapi.com/v1/forecast.json?key=${WEATHER_KEY}&q=${ciudad}&days=10&lang=es`
       );
       setClimaActual(res.data.current);
       setPronostico(res.data.forecast.forecastday);
@@ -105,40 +105,34 @@ const DatosInfo = () => {
     return () => clearTimeout(delay);
   }, [ciudadBuscada]);
 
-  const obtenerIcono = (condicion) => {
+  const obtenerIcono = (condicion, contexto = "general") => {
     const desc = condicion.toLowerCase();
+    const hora = new Date().getHours();
+    const esNoche = hora >= 19 || hora < 6;
 
     if (desc.includes("tormenta")) return stormIcon;
-
     if (desc.includes("lluvia intensa")) return lluviaIntensaIcon;
     if (desc.includes("lluvia moderada")) return lluviaLigeraIcon;
     if (desc.includes("llovizna")) return lloviznaIcon;
     if (desc.includes("lluvia")) return lluviaLigeraIcon;
-
-    if (desc.includes("parcialmente nublado")) {
-      const hora = new Date().getHours();
-      const esNoche = hora >= 19 || hora < 6;
-      return esNoche ? parcialmenteNubladoNocheIcon : parcialmenteNubladoIcon;
-    }
     if (desc.includes("nublado")) return nubladoIcon;
-
-    const hora = new Date().getHours();
-    const esNoche = hora >= 19 || hora < 6;
-    if (esNoche || desc.includes("noche") || desc.includes("luna")) {
-      return moonIcon;
+    if (desc.includes("parcialmente nublado")) {
+      return contexto === "actual" && esNoche
+        ? parcialmenteNubladoNocheIcon
+        : parcialmenteNubladoIcon;
     }
-
-    return sunIcon;
+    if (desc.includes("despejado") || desc.includes("soleado")) {
+      return contexto === "actual" && esNoche ? moonIcon : sunIcon;
+    }
+    return contexto === "actual" && esNoche ? moonIcon : sunIcon;
   };
 
   return (
     <div className="container-fluid py-3">
-      <div className="row">
-
-        <div className="col-12 col-lg-8 mb-4">
+      <div className="grid-expand mb-4">
+        <div className="left-section">
           {climaActual && (
-            <div className="card shadow-lg p-3 mb-4 bg-dark text-light">
-
+            <div className="card static-card p-3 bg-dark text-light">
               <form
                 onSubmit={handleBuscarCiudad}
                 className="d-flex gap-2 mb-3 flex-wrap"
@@ -152,7 +146,6 @@ const DatosInfo = () => {
                 />
                 <button className="btn btn-primary">Buscar</button>
               </form>
-
               {sugerencias.length > 0 && (
                 <ul className="list-group mb-3">
                   {sugerencias.map((sug, idx) => (
@@ -170,15 +163,13 @@ const DatosInfo = () => {
                   ))}
                 </ul>
               )}
-
               <h2 className="text-center">
                 {ubicacion}: {climaActual.temp_c}°C
               </h2>
-
-              <div className="d-flex align-items-center justify-content-center gap-4 flex-wrap">
+              <div className="d-flex align-items-center justify-content-center gap-4 flex-wrap text-center">
                 <img
                   className="big-icon"
-                  src={obtenerIcono(climaActual.condition.text)}
+                  src={obtenerIcono(climaActual.condition.text, "actual")}
                   alt="clima"
                   width="100"
                   height="100"
@@ -193,48 +184,11 @@ const DatosInfo = () => {
               </div>
             </div>
           )}
-
-          {pronostico.length > 0 && (
-            <div className="card shadow-lg p-3 mb-4 bg-dark text-light">
-              <h3>📅 Pronóstico semanal</h3>
-              <div className="row">
-                {pronostico.map((dia, idx) => (
-                  <div key={idx} className="col-6 col-md-4 text-center mb-3">
-                    <p>
-                      {new Date(dia.date).toLocaleDateString("es-ES", {
-                        weekday: "short",
-                        day: "numeric",
-                        month: "short",
-                      })}
-                    </p>
-                    <img
-                      src={obtenerIcono(dia.day.condition.text)}
-                      alt="clima"
-                      width="64"
-                      height="64"
-                      loading="lazy"
-                    />
-                    <p>{dia.day.condition.text}</p>
-                    <p>☀️ Max: {dia.day.maxtemp_c}°C</p>
-                    <p>❄️ Min: {dia.day.mintemp_c}°C</p>
-                    <p>💧 {dia.day.daily_chance_of_rain}% lluvia</p>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
-
-          {pronostico.length > 0 && (
-            <div className="card shadow-lg p-3 mb-4 bg-dark text-light">
-              <WeatherTrendChart forecast={pronostico} />
-            </div>
-          )}
         </div>
-
-        <div className="col-12 col-lg-4">
+        <div className="right-section">
           {dolar && (
-            <div className="card shadow-lg p-3 bg-dark text-light">
-              <h4 className="text-center mb-3">💵 Cotización Dólar</h4>
+            <div className="card static-card p-3 bg-dark text-light h-100 text-center">
+              <h4 className="mb-3">💵 Cotización Dólar</h4>
               <div className="mb-3">
                 <h5>Dólar Blue</h5>
                 <p>
@@ -253,6 +207,43 @@ const DatosInfo = () => {
           )}
         </div>
       </div>
+
+      {pronostico.length > 0 && (
+        <div className="card static-card p-3 mb-4 bg-dark text-light">
+          <h3 className="text-center">📅 Pronóstico semanal</h3>
+          <div className="section-pronostico">
+            {pronostico.map((dia, idx) => (
+              <div key={idx} className="forecast-card text-center">
+                <p>
+                  {new Date(dia.date).toLocaleDateString("es-ES", {
+                    weekday: "short",
+                    day: "numeric",
+                    month: "short",
+                  })}
+                </p>
+                <img
+                  src={obtenerIcono(dia.day.condition.text)}
+                  alt="clima"
+                  width="64"
+                  height="64"
+                  loading="lazy"
+                  style={{ display: "block", margin: "0 auto" }}
+                />
+                <p>{dia.day.condition.text}</p>
+                <p>☀️ Max: {dia.day.maxtemp_c}°C</p>
+                <p>❄️ Min: {dia.day.mintemp_c}°C</p>
+                <p>💧 {dia.day.daily_chance_of_rain}% lluvia</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {pronostico.length > 0 && (
+        <div className="card static-card p-3 bg-dark text-light w-100 d-none d-md-block">
+          <WeatherTrendChart forecast={pronostico} />
+        </div>
+      )}
     </div>
   );
 };

@@ -1,7 +1,7 @@
 body {
   background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
   color: white;
-  overflow-x: hidden; 
+  overflow-x: hidden;
   font-family: 'Poppins', sans-serif;
 }
 
@@ -9,6 +9,7 @@ body {
   animation: fadeIn 0.8s ease-in-out;
   max-width: 100%;
   overflow-x: hidden;
+  padding: 1rem;
 }
 
 @keyframes fadeIn {
@@ -16,38 +17,38 @@ body {
   to { opacity: 1; transform: translateY(0); }
 }
 
-.card.bg-dark {
+.card.bg-dark,
+.card.static-card {
   background: rgba(0, 0, 0, 0.4) !important;
   border: none;
   border-radius: 15px;
   backdrop-filter: blur(6px);
   color: white;
-  transition: transform 0.3s ease;
-  max-width: 100%;
+  width: 100%;
   overflow: hidden;
+  transition: none !important;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
-.card.bg-dark:hover {
-  transform: scale(1.02);
-}
-
-.input-group .form-control {
+form .form-control {
   background: rgba(255, 255, 255, 0.1);
   border: none;
   color: white;
 }
-.input-group .form-control::placeholder {
+
+form .form-control::placeholder {
   color: rgba(255, 255, 255, 0.8);
 }
 
-.input-group .btn {
+form .btn {
   background: linear-gradient(135deg, #4facfe, #00f2fe);
   border: none;
   color: white;
   font-weight: bold;
   transition: 0.3s ease;
 }
-.input-group .btn:hover {
+
+form .btn:hover {
   transform: scale(1.05);
   background: linear-gradient(135deg, #00f2fe, #4facfe);
 }
@@ -58,8 +59,10 @@ body {
   border: none;
   cursor: pointer;
 }
+
 .list-group-item:hover {
-  background: rgba(255, 255, 255, 0.2);
+  background-color: #1a1a2e;
+  color: white;
 }
 
 .big-icon {
@@ -75,18 +78,51 @@ body {
   50% { transform: translateY(-10px); }
 }
 
-.forecast-card img {
-  width: 55px;
-  height: auto;
-  object-fit: contain;
-  max-width: 100%;
+.forecast-card {
+  background-color: #0e1c20;
+  padding: 15px;
+  border-radius: 10px;
+  text-align: center;
+  transition: none !important;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+  font-size: 0.9rem;
 }
 
-.row {
-  flex-wrap: wrap;
-  margin-left: 0;
-  margin-right: 0;
-  max-width: 100%;
+.forecast-card:hover {
+  transform: none !important;
+}
+
+.forecast-card img {
+  width: 45px;
+  height: auto;
+  object-fit: contain;
+  display: block;
+  margin: 0 auto;
+}
+
+/* NUEVO GRID */
+.grid-expand {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 20px;
+  align-items: start;
+}
+
+.left-section {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.right-section {
+  height: 100%;
+}
+
+.section-pronostico {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 10px;
+  text-align: center;
 }
 
 canvas, svg {
@@ -95,9 +131,22 @@ canvas, svg {
   display: block;
 }
 
+/* Responsive */
 @media (max-width: 992px) {
   .big-icon {
     width: 120px;
+  }
+
+  .section-pronostico {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .grid-expand {
+    grid-template-columns: 1fr;
+  }
+
+  .right-section {
+    order: 2;
   }
 }
 
@@ -105,12 +154,22 @@ canvas, svg {
   .big-icon {
     width: 100px;
   }
-  .row {
-    flex-direction: column;
-    align-items: center;
+
+  .section-pronostico {
+    grid-template-columns: repeat(2, 1fr);
   }
-  .card.bg-dark {
-    width: 100% !important;
+
+  .grid-expand {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .right-section {
+    order: 2;
+  }
+
+  .weather-chart {
+    display: none !important;
   }
 }
 
@@ -118,12 +177,34 @@ canvas, svg {
   .big-icon {
     width: 80px;
   }
+
   .forecast-card {
     width: 100%;
     text-align: center;
+    max-width: 280px;
+    margin: 0 auto;
+    font-size: 0.85rem;
   }
-  .row {
-    gap: 10px;
+
+  .forecast-card img {
+    width: 40px;
+  }
+
+  .section-pronostico {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .right-section {
+    order: 2;
+  }
+
+  .cotizacion-container {
+    order: 3;
+    margin-top: 20px;
+    width: 100%;
+    max-width: 320px;
+    margin-left: auto;
+    margin-right: auto;
   }
 }
 
@@ -131,7 +212,46 @@ canvas, svg {
   .big-icon {
     width: 65px;
   }
+
   .forecast-card img {
-    width: 40px;
+    width: 35px;
   }
+
+  .forecast-card {
+    font-size: 0.75rem;
+  }
+
+  .section-pronostico {
+    display: grid;
+    grid-template-columns: repeat(1, 1fr);
+    gap: 10px;
+  }
+
+  .section-pronostico > .forecast-card {
+    display: block !important;
+  }
+
+  .grid-expand {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .right-section {
+    order: 2;
+  }
+
+  .cotizacion-container {
+    width: 100%;
+    max-width: 320px;
+    margin: 0 auto;
+    order: 3;
+  }
+}
+
+.cotizacion-container {
+  background-color: #212e31;
+  padding: 20px;
+  border-radius: 10px;
+  text-align: center;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
 }
